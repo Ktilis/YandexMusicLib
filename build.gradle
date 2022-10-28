@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+
+group 'org.ktilis'
+version '0.1.2'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'org.json:json:20220320'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.3'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'org.springframework:spring-context:5.3.22'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+
+}
+
+def targetJavaVersion = 11
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 11 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release = targetJavaVersion
+    }
+}
