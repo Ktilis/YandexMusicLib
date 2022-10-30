@@ -13,10 +13,10 @@ public class Account {
 
     @Async
     public static CompletableFuture<JSONObject> expiriments() throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.token, ""))
+        if (!Objects.equals(Token.getToken(), ""))
         {
             String urlToRequest = "/account/experiments";
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else
@@ -27,10 +27,10 @@ public class Account {
 
     @Async
     public static CompletableFuture<JSONObject> promocode(String promocode, String language) throws IOException, ExecutionException, InterruptedException {
-        if (!Objects.equals(Token.token, ""))
+        if (!Objects.equals(Token.getToken(), ""))
         {
             String urlToRequest = "/account/consume-promo-code";
-            JSONObject result = PostGet.postDataAndHeaders(BaseUrl + urlToRequest, "code="+promocode+"&language="+language, true).get();
+            JSONObject result = NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, "code="+promocode+"&language="+language, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else
@@ -41,10 +41,10 @@ public class Account {
 
     @Async
     public static CompletableFuture<JSONObject> showSettings() throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.token, ""))
+        if (!Objects.equals(Token.getToken(), ""))
         {
             String urlToRequest = "/account/settings";
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else
@@ -55,11 +55,11 @@ public class Account {
 
     @Async
     public static CompletableFuture<JSONObject> settingsChange(String data) throws IOException, ExecutionException, InterruptedException {
-        if (!Objects.equals(Token.token, ""))
+        if (!Objects.equals(Token.getToken(), ""))
         {
             String urlToRequest = "/account/settings";
 
-            JSONObject result = PostGet.postDataAndHeaders(BaseUrl + urlToRequest, data, true).get();
+            JSONObject result = NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, data, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else
@@ -69,11 +69,11 @@ public class Account {
     }
 
     public static CompletableFuture<JSONObject> showInformAccount() throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.token, ""))
+        if (!Objects.equals(Token.getToken(), ""))
         {
             String urlToRequest = "/account/status";
 
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else
@@ -85,15 +85,15 @@ public class Account {
     public static CompletableFuture<JSONObject> getLikesTrack(String userId) throws IOException, InterruptedException, ExecutionException {
         String urlToRequest = "/users/" + userId + "/likes/tracks";
 
-        JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
         return CompletableFuture.completedFuture(result);
     }
 
     public static CompletableFuture<JSONObject> getDislikesTracks(String userId) throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.token, ""))
+        if (!Objects.equals(Token.getToken(), ""))
         {
             String urlToRequest = "/users/" + userId + "/dislikes/tracks";
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else

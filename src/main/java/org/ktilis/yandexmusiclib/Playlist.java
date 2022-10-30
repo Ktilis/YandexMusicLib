@@ -18,16 +18,16 @@ public class Playlist {
         if(Objects.isNull(pageSize)) pageSize = "20";
 
         String urlToRequest = "/users/" + uid + "/playlists/" + kind + "?page=" + page + "&page-size=" + pageSize;
-        JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
         return CompletableFuture.completedFuture(result);
     }
 
     @Async
-    public static CompletableFuture<JSONObject> getPlaylistUser(String userId) throws IOException, InterruptedException, ExecutionException {
-        if (Token.token != "")
+    public static CompletableFuture<JSONObject> getPlaylistUser() throws IOException, InterruptedException, ExecutionException {
+        if (!Objects.equals(Token.getToken(), ""))
         {
-            String urlToRequest = "/users/" + userId + "/playlists/list";
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            String urlToRequest = "/users/" + Token.getUserId() + "/playlists/list";
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         }
         else
@@ -39,7 +39,7 @@ public class Playlist {
     @Async
     public static CompletableFuture<JSONObject> informPlaylist(String playlistUid, String playlistKind) throws IOException, InterruptedException, ExecutionException {
         String urlToRequest = "/users/" + playlistUid + "/playlists/" + playlistKind;
-        JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
         return CompletableFuture.completedFuture(result);
     }
 

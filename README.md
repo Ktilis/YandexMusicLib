@@ -12,7 +12,7 @@ repositories {
 ```
 ```
 dependencies {
-    implementation 'com.github.Ktilis:YandexMusicApi:0.1.1'
+    implementation 'com.github.Ktilis:YandexMusicApi:0.1.3'
 }
 ```
 
@@ -29,6 +29,6 @@ dependencies {
 <dependency>
 	<groupId>com.github.Ktilis</groupId>
 	<artifactId>YandexMusicApi</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.3</version>
 </dependency>
 ```

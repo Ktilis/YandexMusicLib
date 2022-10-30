@@ -21,31 +21,31 @@ public class Default {
                 + "&page=" + page
                 + "&type=" + typeSearch
                 + "&nocorrect=" + nocorrect;
-        JSONObject result = PostGet.get(BaseUrl + urlToRequest).get();
+        JSONObject result = NetworkManager.get(BaseUrl + urlToRequest).get();
         return CompletableFuture.completedFuture(result);
     }
 
     @Async
     public static CompletableFuture<JSONObject> searchBest(String searchRequest) throws IOException, ExecutionException, InterruptedException {
         String urlToRequest = "/search/suggest?part=" + searchRequest;
-        JSONObject result = PostGet.get(BaseUrl + urlToRequest).get();
+        JSONObject result = NetworkManager.get(BaseUrl + urlToRequest).get();
         return CompletableFuture.completedFuture(result);
     }
 
     @Async
     public static CompletableFuture<JSONObject> getAllGenres() throws IOException, ExecutionException, InterruptedException {
         String urlToRequest = "/genres";
-        JSONObject result = PostGet.get(BaseUrl + urlToRequest).get();
+        JSONObject result = NetworkManager.get(BaseUrl + urlToRequest).get();
         return CompletableFuture.completedFuture(result);
     }
 
     @Async
     public static CompletableFuture<JSONObject> getAllFeed(@Nullable Integer page) throws IOException, InterruptedException, ExecutionException {
-        if (Token.token != "") {
+        if (Token.getToken() != "") {
             if (Objects.isNull(page)) page = 0;
             String urlToRequest = "/feed?page=" + page;
 
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         } else {
             return error_not_token();
@@ -56,15 +56,15 @@ public class Default {
     public static CompletableFuture<JSONObject> getChart() throws IOException, ExecutionException, InterruptedException {
         String urlToRequest = "/landing3/chart";;
 
-        JSONObject result = PostGet.get(BaseUrl + urlToRequest).get();
+        JSONObject result = NetworkManager.get(BaseUrl + urlToRequest).get();
         return CompletableFuture.completedFuture(result);
     }
 
     @Async
     public static CompletableFuture<JSONObject> getNewPlaylists() throws IOException, InterruptedException, ExecutionException {
-        if (Token.token != "") {
+        if (Token.getToken() != "") {
             String urlToRequest = "/landing3/new-playlists";
-            JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, true).get();
+            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
             return CompletableFuture.completedFuture(result);
         } else {
             return error_not_token();
@@ -74,7 +74,7 @@ public class Default {
     @Async
     public static CompletableFuture<JSONObject> getPodcasts() throws IOException, InterruptedException, ExecutionException {
         String urlToRequest = "/landing3/podcasts";
-        JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
         return CompletableFuture.completedFuture(result);
 
     }

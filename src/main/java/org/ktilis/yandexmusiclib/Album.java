@@ -62,7 +62,7 @@ public class Album {
     @Async
     public CompletableFuture<JSONObject> getInformation() throws IOException, InterruptedException, ExecutionException {
         String urlToRequest = "/albums/" + id;
-        JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
 
         if(title != null || year != null || trackCount != null) {
             JSONObject obj = result.getJSONObject("result");
@@ -71,7 +71,7 @@ public class Album {
                 ArrayList<Artist> artists = new ArrayList<>();
                 for(Object objj : obj.getJSONArray("artists")) {
                     JSONObject objjj = (JSONObject) objj;
-                    artists.add(new Artist(objjj.getInt("id"), objjj.getString("name"), objjj.getBoolean("composer"), objjj.getBoolean("various")));
+                    artists.add(new Artist(objjj.getInt("id")));
                 }
                 ArrayList<String> labels = new ArrayList<>();
                 for(Object objj : obj.getJSONArray("labels")) {
@@ -99,7 +99,7 @@ public class Album {
     @Async
     public CompletableFuture<JSONObject> getTracks() throws IOException, InterruptedException, ExecutionException {
         String urlToRequest = "/albums/" + id + "/with-tracks";
-        JSONObject result = PostGet.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
         return CompletableFuture.completedFuture(result);
     }
 
