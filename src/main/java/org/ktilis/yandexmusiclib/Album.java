@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 
 
 @ToString
-@AllArgsConstructor
 public class Album {
     private static final String BaseUrl = "https://api.music.yandex.net:443";
     private @Getter final Integer id;
@@ -63,35 +62,30 @@ public class Album {
     public CompletableFuture<JSONObject> getInformation() throws IOException, InterruptedException, ExecutionException {
         String urlToRequest = "/albums/" + id;
         JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
+        JSONObject obj = result.getJSONObject("result");
 
-        if(title != null || year != null || trackCount != null) {
-            JSONObject obj = result.getJSONObject("result");
-
-            try {
-                ArrayList<Artist> artists = new ArrayList<>();
-                for(Object objj : obj.getJSONArray("artists")) {
-                    JSONObject objjj = (JSONObject) objj;
-                    artists.add(new Artist(objjj.getInt("id")));
-                }
-                ArrayList<String> labels = new ArrayList<>();
-                for(Object objj : obj.getJSONArray("labels")) {
-                    labels.add(((JSONObject) objj).getString("name"));
-                }
-
-                this.availableForPremiumUsers = obj.getBoolean("availableForPremiumUsers");
-                this.title = obj.getString("title");
-                this.trackCount = obj.getInt("trackCount");
-                this.available = obj.getBoolean("available");
-                this.availableForMobile = obj.getBoolean("availableForMobile");
-                this.availablePartially = obj.getBoolean("availablePartially");
-                this.ogImage = obj.getString("ogImage");
-                this.genre = obj.getString("genre");
-                this.year = obj.getInt("year");
-                this.artists = artists;
-                this.labels = labels;
-
-            } catch (Exception e) {}
-        }
+        try {
+            ArrayList<Artist> artists = new ArrayList<>();
+            for(Object objj : obj.getJSONArray("artists")) {
+                JSONObject objjj = (JSONObject) objj;
+                artists.add(new Artist(objjj.getInt("id")));
+            }
+            ArrayList<String> labels = new ArrayList<>();
+            for(Object objj : obj.getJSONArray("labels")) {
+                labels.add(((JSONObject) objj).getString("name"));
+            }
+            this.availableForPremiumUsers = obj.getBoolean("availableForPremiumUsers");
+            this.title = obj.getString("title");
+            this.trackCount = obj.getInt("trackCount");
+            this.available = obj.getBoolean("available");
+            this.availableForMobile = obj.getBoolean("availableForMobile");
+            this.availablePartially = obj.getBoolean("availablePartially");
+            this.ogImage = obj.getString("ogImage");
+            this.genre = obj.getString("genre");
+            this.year = obj.getInt("year");
+            this.artists = artists;
+            this.labels = labels;
+        } catch (Exception ignored) {}
 
         return CompletableFuture.completedFuture(result);
     }

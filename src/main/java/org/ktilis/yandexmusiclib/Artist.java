@@ -113,7 +113,9 @@ public class Artist {
         this.countTracks = result.getJSONObject("artist").getJSONObject("counts").getInt("tracks");
 
         this.available = result.getJSONObject("artist").getBoolean("available");
-        this.noPicturesFromSearch = result.getJSONObject("artist").getBoolean("noPicturesFromSearch");
+        try {
+            this.noPicturesFromSearch = result.getJSONObject("artist").getBoolean("noPicturesFromSearch");
+        } catch (Exception ignored) {}
         this.ticketsAvailable = result.getJSONObject("artist").getBoolean("ticketsAvailable");
         this.ogImage = new Cover.OgImage(result.getJSONObject("artist").getString("ogImage"));
         this.cover = new Cover(result.getJSONObject("artist").getJSONObject("cover").getString("prefix"),
@@ -134,10 +136,14 @@ public class Artist {
         this.links = new ArrayList<>();
         for(Object o : result.getJSONObject("artist").getJSONArray("links")) {
             JSONObject obj = (JSONObject) o;
+            String socialNetwork = null;
+            try {
+                socialNetwork = obj.getString("socialNetwork");
+            } catch (Exception ignored) {};
             this.links.add(new Link.ArtistLink(obj.getString("href"),
                     obj.getString("title"),
                     obj.getString("type"),
-                    Objects.isNull(obj.getString("socialNetwork")) ? null : obj.getString("socialNetwork")
+                    socialNetwork
             ));
         }
         this.allCovers = new ArrayList<>();
@@ -172,16 +178,20 @@ public class Artist {
             this.lastReleases.add(new Album(obj.getInt("id")));
         }
         this.tracksInChart = new ArrayList<>();
-        for(Object o : result.getJSONArray("tracksInChart")) {
-            JSONObject obj = (JSONObject) o;
-            this.tracksInChart.add(new Track.ChartTrack(obj.getInt("listeners"),
-                    obj.getJSONObject("trackId").getInt("id"),
-                    obj.getInt("shift"),
-                    obj.getString("progress"),
-                    obj.getInt("position")
-            ));
-        }
-        this.backgroundVideoUrl = result.getString("backgroundVideoUrl");
+        try {
+            for (Object o : result.getJSONArray("tracksInChart")) {
+                JSONObject obj = (JSONObject) o;
+                this.tracksInChart.add(new Track.ChartTrack(obj.getInt("listeners"),
+                        obj.getJSONObject("trackId").getInt("id"),
+                        obj.getInt("shift"),
+                        obj.getString("progress"),
+                        obj.getInt("position")
+                ));
+            }
+        } catch (Exception ignored) {}
+        try {
+            this.backgroundVideoUrl = result.getString("backgroundVideoUrl");
+        } catch (Exception ignored) {}
         this.popularTracks = new ArrayList<>();
         for(Object o : result.getJSONArray("popularTracks")) {
             JSONObject obj = (JSONObject) o;
