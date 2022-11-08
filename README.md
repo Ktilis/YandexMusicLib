@@ -1,5 +1,4 @@
 [![](https://jitpack.io/v/Ktilis/YandexMusicLib.svg)](https://jitpack.io/#Ktilis/YandexMusicLib)
-
 # YandexMusicLib
 #### _Yandex Music API for Java_
 #### Forked from [YandexMusicApi](https://gitlab.com/KirMozor/YandexMusicApi)
@@ -13,7 +12,7 @@ repositories {
 ```
 ```
 dependencies {
-    implementation 'com.github.Ktilis:YandexMusicLib:0.1.3'
+    implementation 'com.github.Ktilis:YandexMusicLib:0.1.4'
 }
 ```
 
@@ -30,6 +29,6 @@ dependencies {
 <dependency>
 	<groupId>com.github.Ktilis</groupId>
 	<artifactId>YandexMusicLib</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 </dependency>
 ```
