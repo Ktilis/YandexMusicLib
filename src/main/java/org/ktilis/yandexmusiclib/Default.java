@@ -1,6 +1,7 @@
 package org.ktilis.yandexmusiclib;
 
 import org.json.JSONObject;
+import org.ktilis.yandexmusiclib.exeptions.NoTokenFoundException;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Nullable;
@@ -40,35 +41,27 @@ public class Default {
     }
 
     @Async
-    public static CompletableFuture<JSONObject> getAllFeed(@Nullable Integer page) throws IOException, InterruptedException, ExecutionException {
-        if (Token.getToken() != "") {
-            if (Objects.isNull(page)) page = 0;
-            String urlToRequest = "/feed?page=" + page;
-
-            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
-            return CompletableFuture.completedFuture(result);
-        } else {
-            return error_not_token();
-        }
+    public static CompletableFuture<JSONObject> getAllFeed(@Nullable Integer page) throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
+        if (Objects.isNull(page)) page = 0;
+        String urlToRequest = "/feed?page=" + page;
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
+        return CompletableFuture.completedFuture(result);
     }
 
     @Async
     public static CompletableFuture<JSONObject> getChart() throws IOException, ExecutionException, InterruptedException {
         String urlToRequest = "/landing3/chart";;
-
         JSONObject result = NetworkManager.get(BaseUrl + urlToRequest).get();
         return CompletableFuture.completedFuture(result);
     }
 
     @Async
-    public static CompletableFuture<JSONObject> getNewPlaylists() throws IOException, InterruptedException, ExecutionException {
-        if (Token.getToken() != "") {
-            String urlToRequest = "/landing3/new-playlists";
-            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
-            return CompletableFuture.completedFuture(result);
-        } else {
-            return error_not_token();
-        }
+    public static CompletableFuture<JSONObject> getNewPlaylists() throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
+        String urlToRequest = "/landing3/new-playlists";
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
+        return CompletableFuture.completedFuture(result);
     }
 
     @Async
@@ -78,7 +71,5 @@ public class Default {
         return CompletableFuture.completedFuture(result);
 
     }
-
-    private static CompletableFuture<JSONObject> error_not_token() {return CompletableFuture.completedFuture(new JSONObject("{\"error\": \"Not token\"}"));}
 }
 

@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class Token {
-    private @Getter static String token = "";
-    private @Getter static Integer userId;
+    private static @Getter String token = "";
+    private static @Getter Integer userId;
     private static final String GetTokenUrl = "https://oauth.yandex.com/token";
     public static String getTokenWithPassword(String login, String password) {
         JSONObject obj;

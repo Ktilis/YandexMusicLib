@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.json.JSONObject;
+import org.ktilis.yandexmusiclib.exeptions.NoTokenFoundException;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.crypto.Mac;
@@ -64,99 +65,77 @@ public class Track {
     }
 
     @Async
-    public CompletableFuture<String> getMp3Link() throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.getToken(), ""))
-        {
-            String urlToRequest = "/tracks/" + id + "/download-info";
+    public CompletableFuture<String> getMp3Link() throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
 
-            // Getting xml download info
-            JSONObject downloadInfoObj = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
-            String resultGetXml = NetworkManager.getXml(downloadInfoObj.getJSONArray("result").getJSONObject(0).getString("downloadInfoUrl")).get();
+        String urlToRequest = "/tracks/" + id + "/download-info";
 
+        // Getting xml download info
+        JSONObject downloadInfoObj = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
+        String resultGetXml = NetworkManager.getXml(downloadInfoObj.getJSONArray("result").getJSONObject(0).getString("downloadInfoUrl")).get();
 
-
-            // Converting xml to json
-            String xmlResultString = null;
-            try
-            {
-                XmlMapper xmlMapper = new XmlMapper();
-                JsonNode jsonNode = xmlMapper.readTree(resultGetXml.getBytes());
-                ObjectMapper objectMapper = new ObjectMapper();
-                xmlResultString = objectMapper.writeValueAsString(jsonNode);
-
-
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            assert xmlResultString != null;
-            JSONObject xmlResult = new JSONObject(xmlResultString);
-
-            // Generating mp3 link
-            String host = xmlResult.getString("host");
-            String path = xmlResult.getString("path");
-            String ts = xmlResult.getString("ts");
-            String s = xmlResult.getString("s");
-
-            String secret = String.format("XGRlBW9FXlekgbPrRHuSiA%s%s", path.substring(1, path.length() - 1), s);
-            String sign = getMd5(secret);
-
-            return CompletableFuture.completedFuture(String.format("https://%s/get-%s/%s/%s/%s", host, "mp3", sign, ts, path));
+        // Converting xml to json
+        String xmlResultString = null;
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            JsonNode jsonNode = xmlMapper.readTree(resultGetXml.getBytes());
+            ObjectMapper objectMapper = new ObjectMapper();
+            xmlResultString = objectMapper.writeValueAsString(jsonNode);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else
-        {
-            return CompletableFuture.completedFuture("Error: Not token");
-        }
+        assert xmlResultString != null;
+        JSONObject xmlResult = new JSONObject(xmlResultString);
+
+        // Generating mp3 link
+        String host = xmlResult.getString("host");
+        String path = xmlResult.getString("path");
+        String ts = xmlResult.getString("ts");
+        String s = xmlResult.getString("s");
+
+        String secret = String.format("XGRlBW9FXlekgbPrRHuSiA%s%s", path.substring(1, path.length() - 1), s);
+        String sign = getMd5(secret);
+
+        return CompletableFuture.completedFuture(String.format("https://%s/get-%s/%s/%s/%s", host, "mp3", sign, ts, path));
     }
 
     @Async
-    public static CompletableFuture<JSONObject> likesTracks(ArrayList<String> likeTracks, String userId) throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.getToken(), ""))
-        {
-            String urlToRequest = "/users/" + userId + "/likes/tracks/add-multiple";
+    public static CompletableFuture<JSONObject> likesTracks(ArrayList<String> likeTracks, String userId) throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
+        String urlToRequest = "/users/" + userId + "/likes/tracks/add-multiple";
 
-            StringBuilder likeTracksIdString = new StringBuilder();
-            int countTracksId = likeTracks.size();
-
-            for (int i = 0; i < likeTracks.size(); i++) {
-                if (countTracksId - 1 == i) {
-                    likeTracksIdString.append(likeTracks.get(i));
-                } else {
-                    likeTracksIdString.append(likeTracks.get(i)).append(",");
-                }
+        StringBuilder likeTracksIdString = new StringBuilder();
+        int countTracksId = likeTracks.size();
+        for (int i = 0; i < likeTracks.size(); i++) {
+            if (countTracksId - 1 == i) {
+                likeTracksIdString.append(likeTracks.get(i));
+            } else {
+                likeTracksIdString.append(likeTracks.get(i)).append(",");
             }
-            return CompletableFuture.completedFuture(NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, "track-ids="+likeTracksIdString, true).get());
         }
-        else
-        {
-            return error_not_token();
-        }
+        return CompletableFuture.completedFuture(NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, "track-ids="+likeTracksIdString, true).get());
     }
 
     @Async
-    public static CompletableFuture<JSONObject> removeLikesTracks(ArrayList<String> likeTracks, String userId) throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.getToken(), ""))
-        {
-            String urlToRequest = "/users/" + userId + "/likes/tracks/remove";
+    public static CompletableFuture<JSONObject> removeLikesTracks(ArrayList<String> likeTracks, String userId) throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
+        String urlToRequest = "/users/" + userId + "/likes/tracks/remove";
 
-            StringBuilder removeTracksIdString = new StringBuilder();
-            int countTracksId = likeTracks.size();
+        StringBuilder removeTracksIdString = new StringBuilder();
+        int countTracksId = likeTracks.size();
 
-            for (int i = 0; i < likeTracks.size(); i++) {
-                if (countTracksId - 1 == i) {
-                    removeTracksIdString.append(likeTracks.get(i));
-                } else {
-                    removeTracksIdString.append(likeTracks.get(i)).append(",");
-                }
+        for (int i = 0; i < likeTracks.size(); i++) {
+            if (countTracksId - 1 == i) {
+                removeTracksIdString.append(likeTracks.get(i));
+            } else {
+                removeTracksIdString.append(likeTracks.get(i)).append(",");
             }
-            return CompletableFuture.completedFuture(NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, "track-ids="+removeTracksIdString, true).get());
         }
-
-        else
-        {
-            return error_not_token();
-        }
+        return CompletableFuture.completedFuture(NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, "track-ids="+removeTracksIdString, true).get());
     }
+
+
+
 
     @Async
     public CompletableFuture<JSONObject> getInformation() throws IOException, ExecutionException, InterruptedException {
@@ -215,9 +194,6 @@ public class Track {
         String urlToRequest = "/tracks/" + id + "/supplement";
         return CompletableFuture.completedFuture(NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get());
     }
-
-    @Async
-    private static CompletableFuture<JSONObject> error_not_token() {return CompletableFuture.completedFuture(new JSONObject("{\"error\": \"Not token\"}"));}
 
     private static String getMd5(String input)
     {

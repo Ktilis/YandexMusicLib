@@ -1,6 +1,7 @@
 package org.ktilis.yandexmusiclib;
 
 import org.json.JSONObject;
+import org.ktilis.yandexmusiclib.exeptions.NoTokenFoundException;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Nullable;
@@ -23,17 +24,11 @@ public class Playlist {
     }
 
     @Async
-    public static CompletableFuture<JSONObject> getPlaylistUser() throws IOException, InterruptedException, ExecutionException {
-        if (!Objects.equals(Token.getToken(), ""))
-        {
-            String urlToRequest = "/users/" + Token.getUserId() + "/playlists/list";
-            JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
-            return CompletableFuture.completedFuture(result);
-        }
-        else
-        {
-            return error_not_token();
-        }
+    public static CompletableFuture<JSONObject> getPlaylistUser() throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
+        String urlToRequest = "/users/" + Token.getUserId() + "/playlists/list";
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
+        return CompletableFuture.completedFuture(result);
     }
 
     @Async
@@ -42,6 +37,4 @@ public class Playlist {
         JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
         return CompletableFuture.completedFuture(result);
     }
-
-    private static CompletableFuture<JSONObject> error_not_token() {return CompletableFuture.completedFuture(new JSONObject("{\"error\": \"Not token\"}"));}
 }
