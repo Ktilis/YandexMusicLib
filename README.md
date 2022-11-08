@@ -2,6 +2,7 @@
 
 # YandexMusicLib
 #### _Yandex Music API for Java_
+#### Forked from [YandexMusicApi](https://gitlab.com/KirMozor/YandexMusicApi)
 
 ## How To Install
 #### Gradle
@@ -21,7 +22,7 @@ dependencies {
 <repositories>
 	<repository>
         <id>jitpack.io</id>
-		<url>https://jitpack.io</url>
+	<url>https://jitpack.io</url>
 	</repository>
 </repositories>
 ```
