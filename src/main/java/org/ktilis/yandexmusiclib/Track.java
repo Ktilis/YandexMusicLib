@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ktilis.yandexmusiclib.exeptions.NoTokenFoundException;
 import org.springframework.scheduling.annotation.Async;
@@ -28,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 @ToString
 public class Track {
     private static final String BaseUrl = "https://api.music.yandex.net:443";
-    private @Getter Integer id;
+    private static @Getter Integer id;
     private @Getter Integer realId;
     private @Getter String title;
     private @Getter ArrayList<Artist> artists;
@@ -97,6 +98,32 @@ public class Track {
         String sign = getMd5(secret);
 
         return CompletableFuture.completedFuture(String.format("https://%s/get-%s/%s/%s/%s", host, "mp3", sign, ts, path));
+    }
+
+    @Async
+    public CompletableFuture<ArrayList<Link.DownloadInfo>> getStreamLinks() {
+        JSONObject obj = null;
+        try {
+            obj = NetworkManager.getDownloadInfoRequest(id).get();
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException | ExecutionException |
+                 InterruptedException ignored) {}
+        if(Objects.isNull(obj)) return null;
+        ArrayList<Link.DownloadInfo> arrayList = new ArrayList<>();
+        JSONArray arr = obj.getJSONArray("result");
+        for (Object o : arr) {
+            JSONObject obj2 = (JSONObject) o;
+            arrayList.add(new Link.DownloadInfo(
+                    obj2.getBoolean("preview"),
+                    obj2.getString("container"),
+                    obj2.getString("codec"),
+                    obj2.getInt("bitrateInKbps"),
+                    obj2.getString("downloadInfoUrl"),
+                    obj2.getBoolean("direct"),
+                    obj2.getBoolean("gain")
+            ));
+        }
+
+        return CompletableFuture.completedFuture(arrayList);
     }
 
     @Async
@@ -195,8 +222,7 @@ public class Track {
         return CompletableFuture.completedFuture(NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get());
     }
 
-    private static String getMd5(String input)
-    {
+    private static String getMd5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());

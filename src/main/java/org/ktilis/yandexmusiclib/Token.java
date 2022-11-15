@@ -1,6 +1,7 @@
 package org.ktilis.yandexmusiclib;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class Token {
-    private static @Getter String token = "";
+    private static @Getter @Setter String token = "";
     private static @Getter Integer userId;
     private static final String GetTokenUrl = "https://oauth.yandex.com/token";
     public static String getTokenWithPassword(String login, String password) {

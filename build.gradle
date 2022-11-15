@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.ktilis'
-version '0.1.4'
+version '0.1.5'
 
 repositories {
     mavenCentral()
@@ -18,11 +18,11 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    implementation 'org.json:json:20220320'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.3'
+    implementation 'org.json:json:20220924'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.0'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'org.springframework:spring-context:5.3.22'
+    implementation 'org.springframework:spring-context:5.3.23'
 }
 
 test {
