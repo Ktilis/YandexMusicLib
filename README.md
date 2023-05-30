@@ -3,6 +3,8 @@
 #### _Yandex Music API for Java_
 #### Forked from [YandexMusicApi](https://gitlab.com/KirMozor/YandexMusicApi)
 
+#### Warning! The method of obtaining a token does not work.
+
 ## How To Install
 #### Gradle
 ```
