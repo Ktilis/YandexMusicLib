@@ -11,17 +11,12 @@ import org.json.JSONObject;
 import org.ktilis.yandexmusiclib.exeptions.NoTokenFoundException;
 import org.springframework.scheduling.annotation.Async;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -29,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 @ToString
 public class Track {
     private static final String BaseUrl = "https://api.music.yandex.net:443";
-    private static @Getter Integer id;
+    private @Getter Integer id;
     private @Getter Integer realId;
     private @Getter String title;
     private @Getter ArrayList<Artist> artists;
@@ -65,6 +60,10 @@ public class Track {
         return CompletableFuture.completedFuture(result);
     }
 
+    /**
+     *
+     * @return mp3 link of track
+     */
     @Async
     public CompletableFuture<String> getMp3Link() throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
         if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();

@@ -5,13 +5,20 @@ import lombok.Setter;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class Token {
     private static @Getter @Setter String token = "";
-    private static @Getter Integer userId;
+    private static @Getter @Setter Integer userId;
     private static final String GetTokenUrl = "https://oauth.yandex.com/token";
+
+    /**
+     * Warning: This method does not work. Use setToken(String token) with your token.
+     * @param login Yandex login
+     * @param password Yandex password
+     * @return token
+     */
+    @Deprecated
     public static String getTokenWithPassword(String login, String password) {
         JSONObject obj;
         try {

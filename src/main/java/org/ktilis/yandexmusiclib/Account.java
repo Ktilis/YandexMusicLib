@@ -37,10 +37,10 @@ public class Account {
     }
 
     @Async
-    public static CompletableFuture<JSONObject> settingsChange(String data) throws IOException, ExecutionException, InterruptedException, NoTokenFoundException {
+    public static CompletableFuture<JSONObject> settingsChange(JSONObject data) throws IOException, ExecutionException, InterruptedException, NoTokenFoundException {
         if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
         String urlToRequest = "/account/settings";
-        JSONObject result = NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, data, true).get();
+        JSONObject result = NetworkManager.postDataAndHeaders(BaseUrl + urlToRequest, data.toString(), true).get();
         return CompletableFuture.completedFuture(result);
     }
 
@@ -51,16 +51,16 @@ public class Account {
         return CompletableFuture.completedFuture(result);
     }
 
-    public static CompletableFuture<JSONObject> getLikesTrack(String userId) throws IOException, InterruptedException, ExecutionException {
-        String urlToRequest = "/users/" + userId + "/likes/tracks";
-
-        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, false).get();
+    public static CompletableFuture<JSONObject> getLikesTrack() throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+        if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
+        String urlToRequest = "/users/" + Token.getUserId() + "/likes/tracks";
+        JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
         return CompletableFuture.completedFuture(result);
     }
 
-    public static CompletableFuture<JSONObject> getDislikesTracks(String userId) throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
+    public static CompletableFuture<JSONObject> getDislikesTracks() throws IOException, InterruptedException, ExecutionException, NoTokenFoundException {
         if (Objects.equals(Token.getToken(), "")) throw new NoTokenFoundException();
-        String urlToRequest = "/users/" + userId + "/dislikes/tracks";
+        String urlToRequest = "/users/" + Token.getUserId() + "/dislikes/tracks";
         JSONObject result = NetworkManager.getWithHeaders(BaseUrl + urlToRequest, true).get();
         return CompletableFuture.completedFuture(result);
 

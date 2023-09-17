@@ -4,6 +4,7 @@
 #### Forked from [YandexMusicApi](https://gitlab.com/KirMozor/YandexMusicApi)
 
 #### Warning! The method of obtaining a token does not work.
+**Use [method](https://t.me/yandex_music_api/32448).**
 
 ## How To Install
 #### Gradle
