@@ -3,8 +3,7 @@
 #### _Yandex Music API for Java_
 #### Forked from [YandexMusicApi](https://gitlab.com/KirMozor/YandexMusicApi)
 
-#### Warning! The method of obtaining a token does not work.
-**Use [method](https://t.me/yandex_music_api/32448).**
+### Warning! The method of obtaining a token does not work. **Use [method](https://t.me/yandex_music_api/32448).**
 
 ## How To Install
 #### Gradle
@@ -15,7 +14,7 @@ repositories {
 ```
 ```
 dependencies {
-    implementation 'com.github.Ktilis:YandexMusicLib:0.1.5'
+    implementation 'com.github.Ktilis:YandexMusicLib:0.1.5.1'
 }
 ```
 
@@ -32,6 +31,6 @@ dependencies {
 <dependency>
 	<groupId>com.github.Ktilis</groupId>
 	<artifactId>YandexMusicLib</artifactId>
-	<version>0.1.5</version>
+	<version>0.1.5.1</version>
 </dependency>
 ```
